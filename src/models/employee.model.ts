@@ -1,19 +1,38 @@
-// export class Employee {
-//   public id: string;
-//   public firstname: string;
-//   public lastname: string;
-//   public email: string;
-//   public number: number;
-//   public gender: string;
-//   public photo: string;
-// }
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsNotEmpty,
+  MinLength,
+  MaxLength,
+  IsEmail,
+  IsMobilePhone,
+  Length,
+  IsIn,
+} from 'class-validator';
 
-export interface Employee {
-  id: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  number: number;
-  gender: string;
-  photo: string;
+export class Employee {
+  @ApiProperty()
+  public id: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(10)
+  public firstname: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(10)
+  public lastname: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  public email: string;
+  @ApiProperty()
+  @IsMobilePhone('si-LK')
+  public number: string;
+  @ApiProperty()
+  @Length(1)
+  @IsIn(['F', 'M'])
+  public gender: string;
+  @ApiProperty()
+  public photo: string;
 }

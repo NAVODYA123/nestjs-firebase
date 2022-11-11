@@ -1,4 +1,10 @@
-import { Injectable, Scope } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Scope,
+} from '@nestjs/common';
 import {
   getDocs,
   doc,
@@ -6,6 +12,8 @@ import {
   setDoc,
   deleteDoc,
   updateDoc,
+  query,
+  where,
 } from 'firebase/firestore';
 import { employeeCollection } from 'src/configs/firebase';
 import { Employee } from 'src/models/employee.model';
@@ -23,6 +31,11 @@ export class EmployeeService {
   public async getEmployeeById(id: string): Promise<Employee> {
     const docRef = doc(employeeCollection, id);
     const queryData = await getDoc(docRef);
+    console.log('query data', queryData.data());
+    const data = queryData.data();
+    if (!data) {
+      throw new HttpException('record not found', HttpStatus.BAD_REQUEST);
+    }
     return queryData.data();
   }
 
@@ -31,33 +44,56 @@ export class EmployeeService {
     const querySnapshot = await getDocs(employeeCollection);
     const Ids = querySnapshot.docs.map((doc) => doc.data().id);
     const empId = Ids.map((eId) => Number(eId));
-    const maxId = Math.max(...empId) + 1;
-    return maxId;
+    return Number(Math.max(...empId)) + 1;
   }
 
   //add new employee record
-  public async addNewEmployee(employeeData: EmployeeDto): Promise<string> {
-    // const sId = id.toString();
+  public async addNewEmployee(employeeData: EmployeeDto): Promise<void> {
+    console.log('add method reached');
+    if ((await this.employeeRecordExists(employeeData)) !== 0) {
+      throw new BadRequestException('Employee already exists');
+    }
     const newEmpId = String(await this.getNextEmployeeId());
+    console.log('newEmpId', newEmpId);
     const docRef = doc(employeeCollection, newEmpId);
     await setDoc(docRef, {
-      id: newEmpId,
       ...employeeData,
+      id: newEmpId,
     });
-    return 'ok';
   }
 
   //delete employee record
-  public async deleteEmployee(id: string): Promise<string> {
+  public async deleteEmployee(id: string): Promise<void> {
     const docRef = doc(employeeCollection, id);
     await deleteDoc(docRef);
-    return 'document deleted successfully';
   }
 
   //update employee record
-  public async updateEmployee(employeeData: Employee): Promise<string> {
+  public async updateEmployee(employeeData: Employee): Promise<void> {
+    if ((await this.employeeRecordExists(employeeData)) == 1) {
+      const emp = await this.getEmployeeById(employeeData.id);
+      if (emp.email !== employeeData.email) {
+        throw new BadRequestException(
+          'Email you are trying to update is alreday in use',
+        );
+      }
+    } else {
+      throw new BadRequestException('Record does not exist');
+    }
+
     const docRef = doc(employeeCollection, employeeData.id);
     await updateDoc(docRef, employeeData);
-    return 'ok';
+  }
+
+  public async employeeRecordExists(
+    employeeData: EmployeeDto,
+  ): Promise<number> {
+    const docRef = query(
+      employeeCollection,
+      where('email', '==', employeeData.email),
+    );
+    const querySnapshot = await getDocs(docRef);
+    const queryResult = querySnapshot.docs.map((doc) => doc.data());
+    return queryResult.length;
   }
 }
