@@ -6,7 +6,6 @@ import {
   Post,
   Delete,
   Put,
-  InternalServerErrorException,
   HttpStatus,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
@@ -28,7 +27,6 @@ export class EmployeeController {
   @ApiInternalServerErrorResponse()
   @Get('/')
   async getAllEmployees(): Promise<Employee[]> {
-    console.log('get all emp reached');
     return await this.employeeService.getAllEmployees();
   }
   @ApiOkResponse({ type: Employee })
@@ -44,7 +42,6 @@ export class EmployeeController {
   async addNewEmployee(
     @Body() createEmpRecord: EmployeeDto,
   ): Promise<HttpStatus> {
-    console.log('get all emp ids reached');
     await this.employeeService.addNewEmployee(createEmpRecord);
     return HttpStatus.OK;
   }
@@ -52,7 +49,6 @@ export class EmployeeController {
   @ApiInternalServerErrorResponse()
   @Delete(':id')
   async deleteEmployeeRedcord(@Param('id') id: string) {
-    console.log('delete in nest controller');
     return this.employeeService.deleteEmployee(id);
   }
   @ApiOkResponse()

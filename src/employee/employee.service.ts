@@ -31,7 +31,6 @@ export class EmployeeService {
   public async getEmployeeById(id: string): Promise<Employee> {
     const docRef = doc(employeeCollection, id);
     const queryData = await getDoc(docRef);
-    console.log('query data', queryData.data());
     const data = queryData.data();
     if (!data) {
       throw new HttpException('record not found', HttpStatus.BAD_REQUEST);
@@ -49,12 +48,11 @@ export class EmployeeService {
 
   //add new employee record
   public async addNewEmployee(employeeData: EmployeeDto): Promise<void> {
-    console.log('add method reached');
     if ((await this.employeeRecordExists(employeeData)) !== 0) {
       throw new BadRequestException('Employee already exists');
     }
     const newEmpId = String(await this.getNextEmployeeId());
-    console.log('newEmpId', newEmpId);
+
     const docRef = doc(employeeCollection, newEmpId);
     await setDoc(docRef, {
       ...employeeData,
@@ -66,7 +64,6 @@ export class EmployeeService {
   public async deleteEmployee(id: string): Promise<void> {
     await this.getEmployeeById(id);
     const docRef = doc(employeeCollection, id);
-    console.log('docRef', docRef);
     await deleteDoc(docRef);
   }
 
