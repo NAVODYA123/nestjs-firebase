@@ -64,7 +64,9 @@ export class EmployeeService {
 
   //delete employee record
   public async deleteEmployee(id: string): Promise<void> {
+    await this.getEmployeeById(id);
     const docRef = doc(employeeCollection, id);
+    console.log('docRef', docRef);
     await deleteDoc(docRef);
   }
 
