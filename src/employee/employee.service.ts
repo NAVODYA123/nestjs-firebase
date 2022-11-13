@@ -70,12 +70,15 @@ export class EmployeeService {
 
   //update employee record
   public async updateEmployee(employeeData: Employee): Promise<void> {
-    if ((await this.employeeRecordExists(employeeData)) == 1) {
-      const emp = await this.getEmployeeById(employeeData.id);
-      if (emp.email !== employeeData.email) {
-        throw new BadRequestException(
-          'Email you are trying to update is alreday in use',
-        );
+    const recordCount = await this.employeeRecordExists(employeeData);
+    if (recordCount <= 1) {
+      if (recordCount == 1) {
+        const emp = await this.getEmployeeById(employeeData.id);
+        if (emp.email !== employeeData.email) {
+          throw new BadRequestException(
+            'Email you are trying to update is alreday in use',
+          );
+        }
       }
     } else {
       throw new BadRequestException('Record does not exist');
