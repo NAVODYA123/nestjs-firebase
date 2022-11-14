@@ -34,6 +34,13 @@ $ npm run start:dev
 2.	Swagger documents can be accessed by [localhost:3000/swagger](localhost:3000/swagger)
 
 
+## Testing
+1. To test the api use the following command 
+
+```bash
+npm run test employee.controller.spec.ts
+```
+
 #### Assumptions:
 *	Id cannot be updated by the client
 *	Only the email and Id fields are unique 
