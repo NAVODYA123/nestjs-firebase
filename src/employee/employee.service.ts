@@ -17,8 +17,8 @@ import {
 } from 'firebase/firestore';
 // import Heloworld from '../configs/dbtest';
 import { employeeCollection } from '../configs/firebase';
-import { Employee } from 'src/models/employee.model';
-import { EmployeeDto } from 'src/dto/create-employee.dto';
+import { Employee } from '../models/employee.model';
+import { EmployeeDto } from '../dto/create-employee.dto';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class EmployeeService {
