@@ -15,9 +15,10 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { employeeCollection } from 'src/configs/firebase';
-import { Employee } from 'src/models/employee.model';
-import { EmployeeDto } from 'src/dto/create-employee.dto';
+// import Heloworld from '../configs/dbtest';
+import { employeeCollection } from '../configs/firebase';
+import { Employee } from '../models/employee.model';
+import { EmployeeDto } from '../dto/create-employee.dto';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class EmployeeService {

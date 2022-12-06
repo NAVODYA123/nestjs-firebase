@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { Employee } from '../models/employee.model';
-import { EmployeeDto } from 'src/dto/create-employee.dto';
+import { EmployeeDto } from '../dto/create-employee.dto';
 import {
   ApiBody,
   ApiInternalServerErrorResponse,

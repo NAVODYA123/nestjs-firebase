@@ -5,22 +5,27 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "scripts": {
+  "main": "dist/main.js",
+  "engines":{
+    "node": ">=8.0.0"
+  },
+  "scripts": {   
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "node dist/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "gcp-build": "npm run build"
   },
-  "dependencies": {
+  "dependencies": {   
+    "@nestjs/cli": "^9.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/mapped-types": "*",
@@ -34,10 +39,9 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
   },
-  "devDependencies": {
-    "@nestjs/cli": "^9.0.0",
+  "devDependencies": { 
     "@nestjs/schematics": "^9.0.0",
-    "@nestjs/testing": "^9.0.0",
+    "@nestjs/testing": "^9.0.0",     
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.8",
     "@types/node": "^16.0.0",
